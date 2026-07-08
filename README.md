@@ -9,9 +9,6 @@ Basta abrir o `atrinfo-redesign.html` em qualquer navegador para visualizar. Par
 2. Não há build/compilação — é HTML estático, funciona em qualquer hospedagem (inclusive GitHub Pages, Netlify, Vercel, cPanel comum, etc.).
 
 ## Pendências antes de publicar (marcado no código com comentários)
-- [ ] **Telefone fixo/geral** no rodapé — hoje está como `(11) 0000-0000` (placeholder).
-- [ ] **E-mail de contato** no rodapé — hoje está como `contato@atrinfo.com.br` (verificar se é o e-mail real).
-- [ ] **Números da barra de estatísticas** ("40+ implantações", "6 módulos", "98% SLA", "10+ anos") — são valores ilustrativos, precisam virar dados reais da ATRINFO.
 - [x] WhatsApp já configurado com o número real: (11) 98326-1838, com link direto (`wa.me`) no rodapé e no botão flutuante.
 
 ## Estrutura da página
