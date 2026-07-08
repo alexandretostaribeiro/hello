@@ -129,66 +129,24 @@
   showSection((window.location.hash || '#cadastros').replace('#',''));
 
   // ---------------------------------------------------------------------
-  // 4) Render da tabela de Cadastros (com busca)
+  // 4) Render da tabela de Cadastros
   // ---------------------------------------------------------------------
   const tbody = document.getElementById('cadastrosBody');
   const emptyState = document.getElementById('cadastrosEmpty');
-  const emptyStateText = emptyState ? emptyState.querySelector('p') : null;
-  const emptyStateTextOriginal = emptyStateText ? emptyStateText.textContent : '';
   const countBadge = document.getElementById('cadastrosCount');
-  const searchInput = document.getElementById('cadastrosSearchInput');
-  const searchClearBtn = document.getElementById('cadastrosSearchClearBtn');
-  let searchTerm = '';
-
-  function normalizeSearch(s){
-    return (s || '').toString()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // remove acentos
-      .toLowerCase().trim();
-  }
-
-  // Retorna os registros que batem com a busca, junto com o índice original
-  // em `registros` (necessário para Editar/Excluir continuarem apontando
-  // para o item certo mesmo com a lista filtrada).
-  function getRegistrosFiltrados(){
-    if(!searchTerm) return registros.map(function(r, idx){ return { r: r, idx: idx }; });
-    return registros
-      .map(function(r, idx){ return { r: r, idx: idx }; })
-      .filter(function(item){
-        const alvo = normalizeSearch(item.r.codigo) + ' ' + normalizeSearch(item.r.nome) + ' ' + normalizeSearch(item.r.tabela);
-        return alvo.indexOf(searchTerm) > -1;
-      });
-  }
 
   function renderTabela(){
     tbody.innerHTML = '';
-    const filtrados = getRegistrosFiltrados();
-
-    if(searchTerm){
-      countBadge.textContent = filtrados.length + ' de ' + registros.length +
-        (registros.length === 1 ? ' registro' : ' registros');
-    } else {
-      countBadge.textContent = registros.length + (registros.length === 1 ? ' registro' : ' registros');
-    }
-
+    countBadge.textContent = registros.length + (registros.length === 1 ? ' registro' : ' registros');
     if(registros.length === 0){
-      if(emptyStateText) emptyStateText.textContent = emptyStateTextOriginal;
       emptyState.style.display = 'block';
       document.getElementById('cadastrosTableWrap').style.display = 'none';
       return;
     }
-
-    if(filtrados.length === 0){
-      if(emptyStateText) emptyStateText.textContent = 'Nenhum registro encontrado para essa busca.';
-      emptyState.style.display = 'block';
-      document.getElementById('cadastrosTableWrap').style.display = 'none';
-      return;
-    }
-
     emptyState.style.display = 'none';
     document.getElementById('cadastrosTableWrap').style.display = 'block';
 
-    filtrados.forEach(function(item){
-      const r = item.r, idx = item.idx;
+    registros.forEach(function(r, idx){
       const tr = document.createElement('tr');
       tr.innerHTML =
         '<td class="code">'+escapeHtml(r.codigo)+'</td>'+
@@ -200,34 +158,6 @@
           '<button class="icon-btn danger" data-act="del" data-idx="'+idx+'">Excluir</button>'+
         '</div></td>';
       tbody.appendChild(tr);
-    });
-  }
-
-  if(searchInput){
-    searchInput.addEventListener('input', function(){
-      searchTerm = normalizeSearch(searchInput.value);
-      if(searchClearBtn) searchClearBtn.style.display = searchTerm ? 'inline-flex' : 'none';
-      renderTabela();
-    });
-    searchInput.addEventListener('keydown', function(e){
-      if(e.key === 'Enter') e.preventDefault(); // busca já é em tempo real
-    });
-  }
-  const searchBtn = document.getElementById('cadastrosSearchBtn');
-  if(searchBtn){
-    searchBtn.addEventListener('click', function(){
-      searchTerm = normalizeSearch(searchInput.value);
-      if(searchClearBtn) searchClearBtn.style.display = searchTerm ? 'inline-flex' : 'none';
-      renderTabela();
-    });
-  }
-  if(searchClearBtn){
-    searchClearBtn.addEventListener('click', function(){
-      searchInput.value = '';
-      searchTerm = '';
-      searchClearBtn.style.display = 'none';
-      renderTabela();
-      searchInput.focus();
     });
   }
 
