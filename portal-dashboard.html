@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal do Cliente | ATRINFO</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="dot">$</span> ATRINFO<span style="color:var(--text-faint)">/portal</span></div>
+
+    <div class="nav-group-label">Menu</div>
+    <div class="nav-item" data-section="cadastros">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg>
+      Cadastros
+    </div>
+    <div class="nav-item" data-section="planilhas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+      Planilhas
+    </div>
+    <div class="nav-item" data-section="integracoes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 7a5 5 0 0 0-10 0M7 17a5 5 0 0 0 10 0"/><path d="M7 7l10 10"/></svg>
+      Integrações
+    </div>
+    <div class="nav-item" data-section="manutencao">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a4 4 0 1 1-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 1 5.4-5.4z"/></svg>
+      Manutenção
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">--</div>
+        <div style="overflow:hidden;">
+          <div style="color:var(--text); font-size:13px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;" id="userLabel">—</div>
+          <div style="font-size:11px;">Sessão ativa</div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" id="logoutBtn" style="width:100%; margin-top:10px;">Sair</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="icon-btn" id="menuToggle" style="display:none;">☰</button>
+        <div>
+          <div class="eyebrow" id="sectionEyebrow">Cadastros</div>
+          <h1 id="sectionTitle">Tabela de Cadastros</h1>
+        </div>
+      </div>
+      <span class="badge ok"><span class="d"></span>SSO válido</span>
+    </div>
+
+    <div class="content">
+
+      <!-- =================== CADASTROS =================== -->
+      <section id="section-cadastros">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Registros cadastrados</h2>
+              <p class="panel-desc">Código (6), Nome (50), Tabela (3), Valor numérico (8, 2 casas decimais).</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="badge ok" id="cadastrosCount"><span class="d"></span>0 registros</span>
+              <button class="btn btn-primary btn-sm" id="novoRegistroBtn">+ Novo registro</button>
+            </div>
+          </div>
+
+          <div id="cadastrosTableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:110px;">Código</th>
+                  <th>Nome</th>
+                  <th style="width:90px;">Tabela</th>
+                  <th class="num" style="width:130px;">Valor</th>
+                  <th style="width:140px;"></th>
+                </tr>
+              </thead>
+              <tbody id="cadastrosBody"></tbody>
+            </table>
+          </div>
+
+          <div class="empty-state" id="cadastrosEmpty" style="display:none;">
+            <div class="big">📄</div>
+            <p>Nenhum registro cadastrado ainda.</p>
+            <p style="font-size:12px;">Use "Novo registro" ou importe um arquivo CSV em Integrações.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== PLANILHAS =================== -->
+      <section id="section-planilhas" style="display:none;">
+        <div class="placeholder-panel">
+          <h2>Planilhas</h2>
+          <p>Aqui ficarão modelos de planilha para download (ex.: modelo de importação de Cadastros) e exportações
+          da base atual em .xlsx/.csv. Defina com o cliente quais relatórios são prioritários para o primeiro
+          incremento.</p>
+        </div>
+      </section>
+
+      <!-- =================== INTEGRAÇÕES =================== -->
+      <section id="section-integracoes" style="display:none;">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Importar Cadastros (CSV)</h2>
+              <p class="panel-desc">Selecione um arquivo .csv com as colunas Código, Nome, Tabela e Valor.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="abrirImportarBtn">⭳ Importar</button>
+          </div>
+          <p style="font-size:13px; color:var(--text-muted);">
+            Formato esperado (separador <code style="color:var(--accent)">;</code> ou <code style="color:var(--accent)">,</code>):
+          </p>
+          <pre style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-family:var(--mono); font-size:12px; color:var(--text-muted); overflow:auto;">Codigo;Nome;Tabela;Valor
+ABC123;Tabela de Preço Padrão;PPD;1250,50
+XYZ789;Desconto Comercial Regional;DCR;87,90</pre>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Outras integrações</h2></div>
+          <p style="font-size:13px; color:var(--text-muted);">
+            Em breve: exportação automática para o ERP Protheus via API REST/TLPP, e agendamento de importações
+            recorrentes a partir de uma pasta de rede monitorada pelo servidor.
+          </p>
+        </div>
+      </section>
+
+      <!-- =================== MANUTENÇÃO =================== -->
+      <section id="section-manutencao" style="display:none;">
+        <div class="placeholder-panel">
+          <h2>Manutenção</h2>
+          <p>Espaço reservado para rotinas administrativas: logs de importação, histórico de alterações,
+          backup/restore da base e gestão de usuários com acesso ao portal.</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: novo/editar registro ===== -->
+<div class="modal-overlay" id="registroModal">
+  <div class="modal term">
+    <div class="term-bar">
+      <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+      <span class="term-title">cadastro</span>
+      <button class="icon-btn" id="registroModalClose" style="margin-left:auto;">✕</button>
+    </div>
+    <div class="term-body">
+      <h3 id="registroModalTitle">Novo registro</h3>
+      <p class="sub">Preencha os campos conforme as regras do cadastro.</p>
+      <div class="error-box" id="registroFormError"></div>
+      <form id="registroForm">
+        <div class="grid-2">
+          <div class="field">
+            <label>Código (máx. 6)</label>
+            <input id="f_codigo" maxlength="6" required style="text-transform:uppercase;">
+          </div>
+          <div class="field">
+            <label>Tabela (máx. 3)</label>
+            <input id="f_tabela" maxlength="3" required style="text-transform:uppercase;">
+          </div>
+        </div>
+        <div class="field">
+          <label>Nome (máx. 50)</label>
+          <input id="f_nome" maxlength="50" required>
+        </div>
+        <div class="field">
+          <label>Valor (0 a 999.999,99)</label>
+          <input id="f_valor" placeholder="0,00" required>
+        </div>
+        <div class="actions-row">
+          <button type="button" class="btn btn-outline" id="registroCancelBtn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: importar CSV ===== -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal term">
+    <div class="term-bar">
+      <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+      <span class="term-title">importar — csv</span>
+      <button class="icon-btn" id="importModalClose" style="margin-left:auto;">✕</button>
+    </div>
+    <div class="term-body">
+      <h3>Importar Cadastros</h3>
+      <p class="sub">Busque o arquivo .csv na pasta de importação e confira a prévia antes de confirmar.</p>
+
+      <label class="dropzone" id="dropzone">
+        <input type="file" id="csvFileInput" accept=".csv">
+        ⭳ Clique para selecionar o arquivo .csv ou arraste aqui
+      </label>
+
+      <div class="import-summary" id="importSummary"></div>
+      <div id="importPreviewWrap"></div>
+
+      <div class="actions-row">
+        <button type="button" class="btn btn-outline" id="importCancelBtn">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="importConfirmBtn" disabled>Confirmar importação</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/portal.js"></script>
+</body>
+</html>

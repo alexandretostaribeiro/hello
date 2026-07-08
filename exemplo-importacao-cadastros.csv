@@ -1,0 +1,6 @@
+Codigo;Nome;Tabela;Valor
+ABC123;Tabela de Preço Padrão;PPD;1250,50
+XYZ789;Desconto Comercial Regional;DCR;87,90
+PRC001;Preço Promocional Verão;PRV;349,99
+TB2;Tabela Fora do Padrão;T2X;12,00
+LONGCOD1;Nome com código maior que 6 caracteres;TABX;99,90

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal do Cliente | ATRINFO</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="term">
+      <div class="term-bar">
+        <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+        <span class="term-title">portal.atrinfo.com.br — login</span>
+      </div>
+      <div class="term-body">
+
+        <div class="brand"><span class="dot">$</span> ATRINFO<span style="color:var(--text-faint)">/portal</span></div>
+        <div class="login-eyebrow">Acesso restrito</div>
+        <h1 class="login-h1">Portal do Cliente</h1>
+
+        <div id="errorBox" class="error-box"></div>
+
+        <!-- SSO (Single Sign-On) -->
+        <button id="ssoBtn" class="btn btn-outline" type="button">
+          <span id="ssoLabel">Entrar com SSO Corporativo</span>
+        </button>
+
+        <div class="divider">ou com usuário e senha</div>
+
+        <form id="loginForm" autocomplete="off">
+          <div class="field">
+            <label for="user">Usuário</label>
+            <input id="user" name="user" type="text" placeholder="usuario@empresa.com.br" required>
+          </div>
+          <div class="field">
+            <label for="pass">Senha</label>
+            <input id="pass" name="pass" type="password" placeholder="••••••••" required>
+          </div>
+          <button id="submitBtn" class="btn btn-primary" type="submit">Entrar</button>
+        </form>
+
+        <div class="status-line" id="statusLine" style="display:none;">
+          <span class="pulse"></span> <span id="statusText">Validando sessão…</span>
+        </div>
+
+        <p class="hint">
+          Ambiente de demonstração. Use <code>cliente</code> / <code>atrinfo2026</code> para testar o login local,
+          ou clique em SSO para simular a autenticação via provedor de identidade corporativo (OIDC/SAML).
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   AUTENTICAÇÃO — DEMONSTRAÇÃO
+   --------------------------------------------------------------------------
+   Esta página simula dois fluxos de autenticação no front-end, apenas para
+   fins de protótipo. Em produção, SUBSTITUA os dois blocos marcados abaixo
+   por chamadas reais:
+
+   1) LOGIN/SENHA -> POST para o backend (ex: /api/auth/login), que valida
+      contra o Active Directory / LDAP / base de usuários e devolve um
+      token de sessão (JWT) via cookie HttpOnly+Secure.
+
+   2) SSO -> redirecionar o navegador para o endpoint de autorização do
+      provedor de identidade (Azure AD, Okta, Keycloak, Google Workspace...)
+      usando OpenID Connect (Authorization Code + PKCE) ou SAML 2.0.
+      Ex.: window.location.href = "/auth/oidc/login?returnTo=/portal-dashboard.html"
+      O backend recebe o callback, valida o token/assertion junto ao IdP,
+      cria a sessão e só então redireciona para o dashboard.
+   ========================================================================== */
+
+const DEMO_USER = "cliente";
+const DEMO_PASS = "atrinfo2026";
+
+const errorBox   = document.getElementById('errorBox');
+const statusLine = document.getElementById('statusLine');
+const statusText = document.getElementById('statusText');
+const submitBtn  = document.getElementById('submitBtn');
+const ssoBtn     = document.getElementById('ssoBtn');
+const ssoLabel   = document.getElementById('ssoLabel');
+
+function showError(msg){
+  errorBox.textContent = msg;
+  errorBox.classList.add('show');
+}
+function clearError(){
+  errorBox.classList.remove('show');
+}
+function setSession(name, method){
+  const session = { name, method, loginAt: new Date().toISOString() };
+  sessionStorage.setItem('atrinfo_portal_session', JSON.stringify(session));
+}
+function goToDashboard(){
+  window.location.href = 'portal-dashboard.html';
+}
+
+// ---- 1) Login local (usuário e senha) ----
+document.getElementById('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  clearError();
+  const user = document.getElementById('user').value.trim();
+  const pass = document.getElementById('pass').value;
+
+  if(!user || !pass){
+    showError('Informe usuário e senha.');
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Validando…';
+  statusLine.style.display = 'flex';
+  statusText.textContent = 'Autenticando junto ao provedor de identidade…';
+
+  // --- TROCAR EM PRODUÇÃO POR: chamada real ao backend de autenticação ---
+  setTimeout(function(){
+    if(user === DEMO_USER && pass === DEMO_PASS){
+      statusText.textContent = 'Sessão validada. Redirecionando…';
+      setSession(user, 'local');
+      setTimeout(goToDashboard, 400);
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Entrar';
+      statusLine.style.display = 'none';
+      showError('Usuário ou senha inválidos.');
+    }
+  }, 700);
+  // -------------------------------------------------------------------
+});
+
+// ---- 2) SSO ----
+ssoBtn.addEventListener('click', function(){
+  clearError();
+  ssoBtn.disabled = true;
+  ssoLabel.textContent = 'Redirecionando ao provedor de identidade…';
+  statusLine.style.display = 'flex';
+  statusText.textContent = 'Conectando ao SSO corporativo…';
+
+  // --- TROCAR EM PRODUÇÃO POR: ---
+  // window.location.href = "/auth/oidc/login?returnTo=/portal-dashboard.html";
+  setTimeout(function(){
+    statusText.textContent = 'Token validado pelo IdP. Sessão criada.';
+    setSession('usuario.sso@cliente.com.br', 'sso');
+    setTimeout(goToDashboard, 500);
+  }, 1100);
+  // -------------------------------------------------------------------
+});
+</script>
+</body>
+</html>

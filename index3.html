@@ -88,6 +88,24 @@
   .nav__links a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--amber);transition:width .18s ease;}
   .nav__links a:hover{color:var(--ink);}
   .nav__links a:hover::after{width:100%;}
+  .nav__links a.btn-portal-cliente{
+    color:var(--ink);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:7px 16px;
+    font-weight:600;
+    transition:border-color .15s ease, background .15s ease, color .15s ease;
+  }
+  .nav__links a.btn-portal-cliente:hover{
+    border-color:var(--signal);
+    background:var(--signal-soft);
+    color:var(--ink);
+  }
+  .nav__links a.btn-portal-cliente::after{display:none;}
+  .nav__mobile-panel a.btn-portal-cliente{
+    color:var(--signal);
+    font-weight:600;
+  }
   .nav__right{display:flex;align-items:center;gap:20px;}
   .nav__toggle{display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--ink);}
   .nav__mobile-panel{display:none;flex-direction:column;gap:2px;padding:6px clamp(20px,4vw,48px) 22px;background:var(--paper);border-bottom:1px solid var(--line);}
@@ -262,6 +280,7 @@
       <li><a href="#servicos">Serviços</a></li>
       <li><a href="#como-trabalhamos">Como Trabalhamos</a></li>
       <li><a href="#por-que">Por que a ATRINFO</a></li>
+      <li><a href="portal-login.html" class="btn-portal-cliente">Portal do Cliente</a></li>
       <li><a href="#contato">Contato</a></li>
     </ul>
 
@@ -277,6 +296,7 @@
     <a href="#servicos">Serviços</a>
     <a href="#como-trabalhamos">Como Trabalhamos</a>
     <a href="#por-que">Por que a ATRINFO</a>
+    <a href="portal-login.html" class="btn-portal-cliente">Portal do Cliente</a>
     <a href="#contato">Contato</a>
     <a href="#contato" class="btn btn--primary">Solicitar Diagnóstico</a>
   </div>
@@ -498,6 +518,7 @@
           <li><a href="#servicos">Serviços</a></li>
           <li><a href="#como-trabalhamos">Como Trabalhamos</a></li>
           <li><a href="#por-que">Por que a ATRINFO</a></li>
+          <li><a href="portal-login.html">Portal do Cliente</a></li>
         </ul>
       </div>
 
